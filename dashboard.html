@@ -71,7 +71,17 @@ if(
 
 function logout(){
 
+  const deviceId =
+    localStorage.getItem(
+      'deviceId'
+    );
+
   localStorage.clear();
+
+  localStorage.setItem(
+    'deviceId',
+    deviceId
+  );
 
   location.href='index.html';
 
