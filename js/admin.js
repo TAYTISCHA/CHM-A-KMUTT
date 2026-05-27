@@ -31,12 +31,23 @@ async function loadPending(){
   const data =
     await res.json();
 
+  console.log(data);
+
   const list =
     document.getElementById(
       'pendingList'
     );
 
   list.innerHTML='';
+
+  if(!data.users){
+
+    list.innerHTML =
+      'NO PENDING USERS';
+
+    return;
+
+  }
 
   data.users.forEach(user=>{
 
@@ -98,7 +109,17 @@ async function approveUser(studentId){
 
 function logout(){
 
+  const deviceId =
+    localStorage.getItem(
+      'deviceId'
+    );
+
   localStorage.clear();
+
+  localStorage.setItem(
+    'deviceId',
+    deviceId
+  );
 
   location.href='index.html';
 
