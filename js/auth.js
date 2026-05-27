@@ -1,3 +1,26 @@
+function getDeviceId(){
+
+  let id =
+    localStorage.getItem(
+      'deviceId'
+    );
+
+  if(!id){
+
+    id =
+      crypto.randomUUID();
+
+    localStorage.setItem(
+      'deviceId',
+      id
+    );
+
+  }
+
+  return id;
+
+}
+
 function showLoading(text){
 
   document.getElementById(
@@ -32,47 +55,34 @@ async function login(){
       'password'
     ).value;
 
-  try {
+  try{
 
-    const res = await fetch(API_URL,{
+    const url =
 
-      method:'POST',
-      mode:'cors',
+      API_URL +
 
-      headers:{
-        'Content-Type':'application/json'
-      },
+      '?action=login' +
 
-      body:JSON.stringify({
+      '&studentId=' +
+      encodeURIComponent(studentId) +
 
-        action:'login',
+      '&password=' +
+      encodeURIComponent(password) +
 
-        studentId,
+      '&deviceId=' +
+      encodeURIComponent(
+        getDeviceId()
+      );
 
-        password,
-
-        deviceId:getDeviceId()
-
-      })
-
-    });
+    const res =
+      await fetch(url);
 
     const data =
       await res.json();
 
     hideLoading();
 
-    const msg =
-      document.getElementById(
-        'message'
-      );
-
     if(data.success){
-
-      localStorage.setItem(
-        'token',
-        data.token
-      );
 
       localStorage.setItem(
         'role',
@@ -82,18 +92,20 @@ async function login(){
       location.href =
         'dashboard.html';
 
-    } else {
+    }else{
 
-      msg.innerText =
-        data.message;
+      document.getElementById(
+        'message'
+      ).innerText =
+      data.message;
 
     }
 
-  } catch(err){
+  }catch(err){
 
     hideLoading();
 
-    alert('LOGIN ERROR');
+    alert(err);
 
   }
 
@@ -118,52 +130,46 @@ async function register(){
       'inviteCode'
     ).value;
 
-  try {
+  try{
 
-    const res = await fetch(API_URL,{
+    const url =
 
-      method:'POST',
+      API_URL +
 
-      headers:{
-        'Content-Type':'application/json'
-      },
+      '?action=register' +
 
-      body:JSON.stringify({
+      '&studentId=' +
+      encodeURIComponent(studentId) +
 
-        action:'register',
+      '&password=' +
+      encodeURIComponent(password) +
 
-        studentId,
+      '&inviteCode=' +
+      encodeURIComponent(inviteCode) +
 
-        password,
+      '&deviceId=' +
+      encodeURIComponent(
+        getDeviceId()
+      );
 
-        inviteCode,
-
-        deviceId:getDeviceId()
-
-      })
-
-    });
+    const res =
+      await fetch(url);
 
     const data =
       await res.json();
 
     hideLoading();
 
-    const msg =
-      document.getElementById(
-        'message'
-      );
+    document.getElementById(
+      'message'
+    ).innerText =
+    data.message;
 
-    msg.innerText =
-      data.message;
-
-  } catch(err){
+  }catch(err){
 
     hideLoading();
 
-    console.log(err);
-
-alert(err);
+    alert(err);
 
   }
 
