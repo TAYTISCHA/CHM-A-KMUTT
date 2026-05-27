@@ -1,3 +1,5 @@
+// js/admin.js
+
 const role =
   localStorage.getItem('role');
 
@@ -12,99 +14,125 @@ loadPending();
 
 async function loadPending(){
 
-  const res = await fetch(API_URL,{
+  try{
 
-    method:'POST',
+    const url =
 
-    headers:{
-      'Content-Type':'application/json'
-    },
+      API_URL +
 
-    body:JSON.stringify({
+      '?action=getPending';
 
-      action:'getPending'
+    const res =
+      await fetch(url);
 
-    })
+    const data =
+      await res.json();
 
-  });
+    console.log(data);
 
-  const data =
-    await res.json();
+    const list =
+      document.getElementById(
+        'pendingList'
+      );
 
-  const list =
-    document.getElementById(
-      'pendingList'
-    );
+    list.innerHTML='';
 
-  list.innerHTML='';
+    if(
 
-  if(!data.users){
+      !data.users ||
 
-    list.innerHTML =
-      'NO PENDING USERS';
+      data.users.length === 0
 
-    return;
+    ){
+
+      list.innerHTML =
+        'NO PENDING USERS';
+
+      return;
+
+    }
+
+    data.users.forEach(user=>{
+
+      list.innerHTML += `
+
+        <div style="
+          background:white;
+          color:black;
+          padding:10px;
+          margin-bottom:10px;
+          border-radius:10px;
+        ">
+
+          ${user.studentId}
+
+          <br><br>
+
+          <button
+            onclick="
+              approveUser(
+                '${user.studentId}'
+              )
+            "
+          >
+            APPROVE
+          </button>
+
+        </div>
+
+      `;
+
+    });
+
+  }catch(err){
+
+    console.log(err);
+
+    alert(err);
 
   }
-
-  data.users.forEach(user=>{
-
-    list.innerHTML += `
-
-      <div style="
-        background:white;
-        color:black;
-        padding:10px;
-        margin-bottom:10px;
-        border-radius:10px;
-      ">
-
-        ${user.studentId}
-
-        <br><br>
-
-        <button
-          onclick="
-            approveUser(
-              '${user.studentId}'
-            )
-          "
-        >
-          APPROVE
-        </button>
-
-      </div>
-
-    `;
-
-  });
 
 }
 
 async function approveUser(studentId){
 
-  await fetch(API_URL,{
+  try{
 
-    method:'POST',
-    mode:'cors',
+    const url =
 
-    headers:{
-      'Content-Type':'application/json'
-    },
+      API_URL +
 
-    body:JSON.stringify({
+      '?action=approveUser' +
 
-      action:'approveUser',
+      '&studentId=' +
 
-      studentId
+      encodeURIComponent(studentId);
 
-    })
+    const res =
+      await fetch(url);
 
-  });
+    const data =
+      await res.json();
 
-  alert('APPROVED SUCCESS');
+    if(data.success){
 
-  loadPending();
+      alert('APPROVED SUCCESS');
+
+      loadPending();
+
+    }else{
+
+      alert(data.message);
+
+    }
+
+  }catch(err){
+
+    console.log(err);
+
+    alert(err);
+
+  }
 
 }
 
