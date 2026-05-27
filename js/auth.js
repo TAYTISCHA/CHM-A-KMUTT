@@ -1,25 +1,44 @@
 async function login(){
 
   const studentId =
-    document.getElementById('studentId').value;
+    document.getElementById(
+      'studentId'
+    ).value;
 
   const password =
-    document.getElementById('password').value;
+    document.getElementById(
+      'password'
+    ).value;
 
   const res = await fetch(API_URL,{
+
     method:'POST',
+
+    headers:{
+      'Content-Type':'application/json'
+    },
+
     body:JSON.stringify({
+
       action:'login',
+
       studentId,
+
       password,
+
       deviceId:getDeviceId()
+
     })
+
   });
 
-  const data = await res.json();
+  const data =
+    await res.json();
 
   const msg =
-    document.getElementById('message');
+    document.getElementById(
+      'message'
+    );
 
   if(data.success){
 
@@ -33,41 +52,68 @@ async function login(){
       data.role
     );
 
-    window.location.href='dashboard.html';
+    location.href =
+      'dashboard.html';
 
-  }else{
+  } else {
 
-    msg.innerText=data.message;
+    msg.innerText =
+      data.message;
 
   }
+
 }
 
 async function register(){
 
   const studentId =
-    document.getElementById('studentId').value;
+    document.getElementById(
+      'studentId'
+    ).value;
 
   const password =
-    document.getElementById('password').value;
+    document.getElementById(
+      'password'
+    ).value;
 
   const inviteCode =
-    document.getElementById('inviteCode').value;
+    document.getElementById(
+      'inviteCode'
+    ).value;
 
   const res = await fetch(API_URL,{
+
     method:'POST',
+
+    headers:{
+      'Content-Type':'application/json'
+    },
+
     body:JSON.stringify({
+
       action:'register',
+
       studentId,
+
       password,
+
       inviteCode,
+
       deviceId:getDeviceId()
+
     })
+
   });
 
-  const data = await res.json();
+  const data =
+    await res.json();
 
   const msg =
-    document.getElementById('message');
+    document.getElementById(
+      'message'
+    );
 
-  msg.innerText=data.message;
+  msg.innerText =
+    data.message;
+
 }
