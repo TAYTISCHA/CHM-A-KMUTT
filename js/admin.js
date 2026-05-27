@@ -86,6 +86,7 @@ async function approveUser(studentId){
   await fetch(API_URL,{
 
     method:'POST',
+    mode:'cors',
 
     headers:{
       'Content-Type':'application/json'
