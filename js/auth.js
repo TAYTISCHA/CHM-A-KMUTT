@@ -1,4 +1,26 @@
+function showLoading(text){
+
+  document.getElementById(
+    'loadingPopup'
+  ).style.display='flex';
+
+  document.getElementById(
+    'loadingText'
+  ).innerText=text;
+
+}
+
+function hideLoading(){
+
+  document.getElementById(
+    'loadingPopup'
+  ).style.display='none';
+
+}
+
 async function login(){
+
+  showLoading('กำลังเข้าสู่ระบบ...');
 
   const studentId =
     document.getElementById(
@@ -10,61 +32,75 @@ async function login(){
       'password'
     ).value;
 
-  const res = await fetch(API_URL,{
+  try {
 
-    method:'POST',
+    const res = await fetch(API_URL,{
 
-    headers:{
-      'Content-Type':'application/json'
-    },
+      method:'POST',
 
-    body:JSON.stringify({
+      headers:{
+        'Content-Type':'application/json'
+      },
 
-      action:'login',
+      body:JSON.stringify({
 
-      studentId,
+        action:'login',
 
-      password,
+        studentId,
 
-      deviceId:getDeviceId()
+        password,
 
-    })
+        deviceId:getDeviceId()
 
-  });
+      })
 
-  const data =
-    await res.json();
+    });
 
-  const msg =
-    document.getElementById(
-      'message'
-    );
+    const data =
+      await res.json();
 
-  if(data.success){
+    hideLoading();
 
-    localStorage.setItem(
-      'token',
-      data.token
-    );
+    const msg =
+      document.getElementById(
+        'message'
+      );
 
-    localStorage.setItem(
-      'role',
-      data.role
-    );
+    if(data.success){
 
-    location.href =
-      'dashboard.html';
+      localStorage.setItem(
+        'token',
+        data.token
+      );
 
-  } else {
+      localStorage.setItem(
+        'role',
+        data.role
+      );
 
-    msg.innerText =
-      data.message;
+      location.href =
+        'dashboard.html';
+
+    } else {
+
+      msg.innerText =
+        data.message;
+
+    }
+
+  } catch(err){
+
+    hideLoading();
+
+    alert('LOGIN ERROR');
 
   }
 
 }
 
 async function register(){
+
+  showLoading('กำลังสมัครสมาชิก...');
 
   const studentId =
     document.getElementById(
@@ -81,39 +117,51 @@ async function register(){
       'inviteCode'
     ).value;
 
-  const res = await fetch(API_URL,{
+  try {
 
-    method:'POST',
+    const res = await fetch(API_URL,{
 
-    headers:{
-      'Content-Type':'application/json'
-    },
+      method:'POST',
 
-    body:JSON.stringify({
+      headers:{
+        'Content-Type':'application/json'
+      },
 
-      action:'register',
+      body:JSON.stringify({
 
-      studentId,
+        action:'register',
 
-      password,
+        studentId,
 
-      inviteCode,
+        password,
 
-      deviceId:getDeviceId()
+        inviteCode,
 
-    })
+        deviceId:getDeviceId()
 
-  });
+      })
 
-  const data =
-    await res.json();
+    });
 
-  const msg =
-    document.getElementById(
-      'message'
-    );
+    const data =
+      await res.json();
 
-  msg.innerText =
-    data.message;
+    hideLoading();
+
+    const msg =
+      document.getElementById(
+        'message'
+      );
+
+    msg.innerText =
+      data.message;
+
+  } catch(err){
+
+    hideLoading();
+
+    alert('REGISTER ERROR');
+
+  }
 
 }
