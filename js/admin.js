@@ -31,8 +31,6 @@ async function loadPending(){
   const data =
     await res.json();
 
-  console.log(data);
-
   const list =
     document.getElementById(
       'pendingList'
@@ -102,6 +100,8 @@ async function approveUser(studentId){
     })
 
   });
+
+  alert('APPROVED SUCCESS');
 
   loadPending();
 
