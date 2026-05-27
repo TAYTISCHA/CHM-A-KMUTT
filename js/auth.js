@@ -161,7 +161,9 @@ async function register(){
 
     hideLoading();
 
-    alert('REGISTER ERROR');
+    console.log(err);
+
+alert(err);
 
   }
 
