@@ -1,1 +1,52 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+
+  <title>Dashboard</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="logo">
+    CHM-A-KMUTT
+  </div>
+
+  <h2 id="role"></h2>
+
+  <button onclick="logout()">
+    LOGOUT
+  </button>
+
+</div>
+
+<script>
+
+const role =
+  localStorage.getItem('role');
+
+if(!role){
+  location.href='index.html';
+}
+
+document.getElementById(
+  'role'
+).innerText = role;
+
+function logout(){
+
+  localStorage.clear();
+
+  location.href='index.html';
+
+}
+
+</script>
+
+</body>
+</html>
