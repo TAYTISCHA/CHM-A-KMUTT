@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="testPost()">
+TEST POST
+</button>
+
+<script>
+
+const API_URL =
+'https://script.google.com/macros/s/AKfycbyyrOizm7tQOfzo_2BnLnihZBe9fPPl6zmqZLOo0AO0j2oEgXfhLBmc-qaImPtzfGGVEw/exec';
+
+async function testPost(){
+
+  try{
+
+    const res =
+      await fetch(API_URL,{
+
+        method:'POST',
+
+        headers:{
+          'Content-Type':
+          'text/plain'
+        },
+
+        body:JSON.stringify({
+
+          action:'uploadFile',
+
+          fileName:'test.txt',
+
+          mimeType:'text/plain',
+
+          studentId:'TEST',
+
+          base64:'dGVzdA=='
+
+        })
+
+      });
+
+    const text =
+      await res.text();
+
+    alert(text);
+
+  }catch(err){
+
+    alert(err);
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
