@@ -5,7 +5,10 @@
 
   <title>Upload File</title>
 
-<link rel="stylesheet" href="css/style.css">
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  >
 
 </head>
 
@@ -17,24 +20,29 @@
     UPLOAD FILE
   </div>
 
-  <input
-    type="file"
-    id="fileInput"
-  >
+  <form id="uploadForm">
 
-  <br><br>
+    <input
+      type="file"
+      id="fileInput"
+      required
+    >
 
-  <button onclick="uploadFile()">
-    UPLOAD
-  </button>
+    <br><br>
 
-  <br><br>
+    <button type="submit">
+      UPLOAD
+    </button>
+
+  </form>
+
+  <br>
 
   <div id="message"></div>
 
 </div>
 
-  <!-- LOADING POPUP -->
+<!-- POPUP -->
 
 <div
   class="loading-popup"
@@ -52,7 +60,6 @@
 </div>
 
 <script src="js/config.js"></script>
-<script src="js/security.js"></script>
 <script src="js/upload.js"></script>
 
 </body>
