@@ -75,11 +75,16 @@ async function loadFiles(){
 
 }
 
-function openFile(url){
+function openFile(url,type){
 
-  window.open(
-    url,
-    '_blank'
-  );
+  location.href =
+
+    'viewer.html' +
+
+    '?url=' +
+    encodeURIComponent(url) +
+
+    '&type=' +
+    encodeURIComponent(type);
 
 }
