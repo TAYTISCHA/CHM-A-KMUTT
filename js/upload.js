@@ -42,133 +42,122 @@ UPLOAD
 ========================
 */
 
-document.getElementById(
-  'uploadForm'
-).addEventListener(
-  'submit',
-  async function(e){
+async function uploadFile(){
 
-    e.preventDefault();
+  const file =
+    document.getElementById(
+      'fileInput'
+    ).files[0];
 
-    const file =
-      document.getElementById(
-        'fileInput'
-      ).files[0];
+  if(!file){
 
-    if(!file){
+    alert('SELECT FILE');
+    return;
 
-      alert('SELECT FILE');
-      return;
+  }
 
-    }
+  /*
+  ========================
+  25MB LIMIT
+  ========================
+  */
 
-    showLoading(
-      'กำลังอัปโหลดไฟล์...'
+  if(file.size > 25 * 1024 * 1024){
+
+    alert(
+      'FILE TOO LARGE (MAX 25MB)'
     );
+
+    return;
+
+  }
+
+  showLoading(
+    'กำลังอัปโหลดไฟล์ กรุณารอสักครู่...'
+  );
+
+  const reader =
+    new FileReader();
+
+  reader.onerror = () => {
+
+    hideLoading();
+
+    alert(
+      'READ FILE ERROR'
+    );
+
+  };
+
+  reader.onload = async () => {
 
     try{
 
-      const reader =
-        new FileReader();
+      const base64 =
+        reader.result
+          .split(',')[1];
 
-      reader.onload =
-        async function(){
+      const payload = {
 
-          try{
+        action:'uploadFile',
 
-            const base64 =
-              reader.result
-                .split(',')[1];
+        fileName:file.name,
 
-            const formData =
-              new FormData();
+        mimeType:file.type,
 
-            formData.append(
-              'action',
-              'uploadFile'
-            );
+        studentId:
+          localStorage.getItem(
+            'studentId'
+          ) || 'UNKNOWN',
 
-            formData.append(
-              'fileName',
-              file.name
-            );
+        base64:base64
 
-            formData.append(
-              'mimeType',
-              file.type
-            );
+      };
 
-            formData.append(
-              'studentId',
-              localStorage.getItem(
-                'studentId'
-              ) || 'UNKNOWN'
-            );
+      const res =
+        await fetch(API_URL,{
 
-            formData.append(
-              'base64',
-              base64
-            );
+          method:'POST',
 
-            const res =
-              await fetch(API_URL,{
+          redirect:'follow',
 
-                method:'POST',
+          headers:{
+            'Content-Type':
+            'application/json'
+          },
 
-                body:JSON.stringify({
+          body:JSON.stringify(
+            payload
+          )
 
-                  action:'uploadFile',
+        });
 
-                  fileName:file.name,
+      const text =
+        await res.text();
 
-                  mimeType:file.type,
+      console.log(text);
 
-                  studentId:
-                    localStorage.getItem(
-                      'studentId'
-                    ) || 'UNKNOWN',
+      const data =
+        JSON.parse(text);
 
-                  base64:base64
+      hideLoading();
 
-                })
+      if(data.success){
 
-              });
+        alert(
+          'UPLOAD SUCCESS'
+        );
 
-            const data =
-              await res.json();
+        document.getElementById(
+          'message'
+        ).innerText =
+        'UPLOAD SUCCESS';
 
-            hideLoading();
+      }else{
 
-            if(data.success){
+        alert(data.message);
 
-              alert(
-                'UPLOAD SUCCESS'
-              );
-
-              document.getElementById(
-                'message'
-              ).innerText =
-              'UPLOAD SUCCESS';
-
-            }else{
-
-              alert(data.message);
-
-            }
-
-          }catch(err){
-
-            hideLoading();
-
-            console.log(err);
-
-            alert(err);
-
-          }
-
-        };
-
-      reader.readAsDataURL(file);
+      }
 
     }catch(err){
 
@@ -176,9 +165,12 @@ document.getElementById(
 
       console.log(err);
 
-      alert(err);
+      alert(String(err));
 
     }
 
-  }
-);
+  };
+
+  reader.readAsDataURL(file);
+
+}
