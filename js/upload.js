@@ -42,106 +42,143 @@ UPLOAD
 ========================
 */
 
-async function uploadFile(){
+document.getElementById(
+  'uploadForm'
+).addEventListener(
+  'submit',
+  async function(e){
 
-  const file =
-    document.getElementById(
-      'fileInput'
-    ).files[0];
+    e.preventDefault();
 
-  if(!file){
+    const file =
+      document.getElementById(
+        'fileInput'
+      ).files[0];
 
-    alert('SELECT FILE');
-    return;
+    if(!file){
+
+      alert('SELECT FILE');
+      return;
+
+    }
+
+    showLoading(
+      'กำลังอัปโหลดไฟล์...'
+    );
+
+    try{
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        async function(){
+
+          try{
+
+            const base64 =
+              reader.result
+                .split(',')[1];
+
+            const formData =
+              new FormData();
+
+            formData.append(
+              'action',
+              'uploadFile'
+            );
+
+            formData.append(
+              'fileName',
+              file.name
+            );
+
+            formData.append(
+              'mimeType',
+              file.type
+            );
+
+            formData.append(
+              'studentId',
+              localStorage.getItem(
+                'studentId'
+              ) || 'UNKNOWN'
+            );
+
+            formData.append(
+              'base64',
+              base64
+            );
+
+            const res =
+              await fetch(API_URL,{
+
+                method:'POST',
+
+                body:JSON.stringify({
+
+                  action:'uploadFile',
+
+                  fileName:file.name,
+
+                  mimeType:file.type,
+
+                  studentId:
+                    localStorage.getItem(
+                      'studentId'
+                    ) || 'UNKNOWN',
+
+                  base64:base64
+
+                })
+
+              });
+
+            const data =
+              await res.json();
+
+            hideLoading();
+
+            if(data.success){
+
+              alert(
+                'UPLOAD SUCCESS'
+              );
+
+              document.getElementById(
+                'message'
+              ).innerText =
+              'UPLOAD SUCCESS';
+
+            }else{
+
+              alert(data.message);
+
+            }
+
+          }catch(err){
+
+            hideLoading();
+
+            console.log(err);
+
+            alert(err);
+
+          }
+
+        };
+
+      reader.readAsDataURL(file);
+
+    }catch(err){
+
+      hideLoading();
+
+      console.log(err);
+
+      alert(err);
+
+    }
 
   }
-
-  if(file.size > 10 * 1024 * 1024){
-
-    alert('FILE TOO LARGE');
-    return;
-
-  }
-
-  showLoading(
-    'กำลังอัปโหลดไฟล์...'
-  );
-
-  const reader =
-    new FileReader();
-
-  reader.onload =
-    async function(){
-
-      try{
-
-        const base64 =
-          reader.result
-            .split(',')[1];
-
-        const res =
-          await fetch(API_URL,{
-
-            method:'POST',
-
-            headers:{
-              'Content-Type':
-              'application/json'
-            },
-
-            body:JSON.stringify({
-
-              action:'uploadFile',
-
-              fileName:file.name,
-
-              mimeType:file.type,
-
-              studentId:
-                localStorage.getItem(
-                  'studentId'
-                ) || 'UNKNOWN',
-
-              base64:base64
-
-            })
-
-          });
-
-        const data =
-          await res.json();
-
-        hideLoading();
-
-        if(data.success){
-
-          alert(
-            'UPLOAD SUCCESS'
-          );
-
-          document.getElementById(
-            'message'
-          ).innerText =
-          'UPLOAD SUCCESS';
-
-        }else{
-
-          alert(data.message);
-
-        }
-
-      }catch(err){
-
-        hideLoading();
-
-        console.log(err);
-
-        alert(err);
-
-      }
-
-    };
-
-  reader.readAsDataURL(file);
-
-}
+);
