@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html>
 
 <head>
@@ -20,23 +20,18 @@
     UPLOAD FILE
   </div>
 
-  <form id="uploadForm">
+  <input
+    type="file"
+    id="fileInput"
+  >
 
-    <input
-      type="file"
-      id="fileInput"
-      required
-    >
+  <br><br>
 
-    <br><br>
+  <button onclick="uploadFile()">
+    UPLOAD
+  </button>
 
-    <button type="submit">
-      UPLOAD
-    </button>
-
-  </form>
-
-  <br>
+  <br><br>
 
   <div id="message"></div>
 
