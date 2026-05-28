@@ -89,7 +89,7 @@ async function uploadFile(){
 
   };
 
-  reader.onload = async () => {
+  reader.onload = () => {
 
     try{
 
@@ -97,7 +97,7 @@ async function uploadFile(){
         reader.result
           .split(',')[1];
 
-      const payload = {
+      const payload = JSON.stringify({
 
         action:'uploadFile',
 
@@ -112,52 +112,89 @@ async function uploadFile(){
 
         base64:base64
 
+      });
+
+      const xhr =
+        new XMLHttpRequest();
+
+      xhr.open(
+        'POST',
+        API_URL,
+        true
+      );
+
+      xhr.setRequestHeader(
+        'Content-Type',
+        'application/json'
+      );
+
+      /*
+      ========================
+      SUCCESS
+      ========================
+      */
+
+      xhr.onload = function(){
+
+        hideLoading();
+
+        try{
+
+          const data =
+            JSON.parse(
+              xhr.responseText
+            );
+
+          if(data.success){
+
+            alert(
+              'UPLOAD SUCCESS'
+            );
+
+            document.getElementById(
+              'message'
+            ).innerText =
+            'UPLOAD SUCCESS';
+
+          }else{
+
+            alert(data.message);
+
+          }
+
+        }catch(err){
+
+          alert(
+            'INVALID SERVER RESPONSE'
+          );
+
+        }
+
       };
 
-      const res =
-        await fetch(API_URL,{
+      /*
+      ========================
+      ERROR
+      ========================
+      */
 
-          method:'POST',
+      xhr.onerror = function(){
 
-          redirect:'follow',
-
-          headers:{
-            'Content-Type':
-            'application/json'
-          },
-
-          body:JSON.stringify(
-            payload
-          )
-
-        });
-
-      const text =
-        await res.text();
-
-      console.log(text);
-
-      const data =
-        JSON.parse(text);
-
-      hideLoading();
-
-      if(data.success){
+        hideLoading();
 
         alert(
-          'UPLOAD SUCCESS'
+          'UPLOAD FAILED'
         );
 
-        document.getElementById(
-          'message'
-        ).innerText =
-        'UPLOAD SUCCESS';
+      };
 
-      }else{
+      /*
+      ========================
+      SEND
+      ========================
+      */
 
-        alert(data.message);
-
-      }
+      xhr.send(payload);
 
     }catch(err){
 
