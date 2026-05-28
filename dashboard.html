@@ -7,7 +7,7 @@
 
   <link
     rel="stylesheet"
-    href="css/style.css"
+    href="style.css"
   >
 
 </head>
@@ -24,8 +24,23 @@
 
   <br>
 
-  <div id="adminBtn"></div>
+  <!-- ADMIN BUTTON -->
+  <div id="adminButtons"></div>
 
+  <br>
+
+  <!-- VIEW FILES -->
+  <button
+    onclick="
+      location.href='files.html'
+    "
+  >
+    VIEW FILES
+  </button>
+
+  <br><br>
+
+  <!-- LOGOUT -->
   <button onclick="logout()">
     LOGOUT
   </button>
@@ -45,15 +60,27 @@ if(!role){
 
 document.getElementById(
   'role'
-).innerText = role;
+).innerText =
+'ROLE : ' + role;
+
+/*
+========================
+ADMIN BUTTONS
+========================
+*/
 
 if(
-  role === 'OWNER' ||
+
+  role === 'OWNER'
+
+  ||
+
   role === 'SENIOR'
+
 ){
 
   document.getElementById(
-    'adminBtn'
+    'adminButtons'
   ).innerHTML = `
 
     <button
@@ -65,9 +92,26 @@ if(
       ADMIN PANEL
     </button>
 
+    <br><br>
+
+    <button
+      onclick="
+        location.href=
+        'upload.html'
+      "
+    >
+      UPLOAD FILE
+    </button>
+
   `;
 
 }
+
+/*
+========================
+LOGOUT
+========================
+*/
 
 function logout(){
 
