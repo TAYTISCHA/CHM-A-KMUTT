@@ -59,10 +59,11 @@ async function loadFiles(){
 
         <button
           onclick="
-            openFile(
-              '${file.driveUrl}'
-            )
-          "
+  openFile(
+    '${file.driveUrl}',
+    '${file.fileType}'
+  )
+"
         >
           OPEN
         </button>
