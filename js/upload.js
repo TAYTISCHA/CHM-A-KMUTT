@@ -24,58 +24,79 @@ async function uploadFile(){
 
   }
 
+  if(file.size > 10 * 1024 * 1024){
+
+    alert('FILE TOO LARGE');
+    return;
+
+  }
+
+  document.getElementById(
+    'message'
+  ).innerText =
+  'UPLOADING...';
+
   const reader =
     new FileReader();
 
   reader.onload =
     async function(){
 
-      const base64 =
-        reader.result
-          .split(',')[1];
+      try{
 
-      const url =
+        const base64 =
+          reader.result
+            .split(',')[1];
 
-        API_URL +
+        const res =
+          await fetch(API_URL,{
 
-        '?action=uploadFile' +
+            method:'POST',
 
-        '&fileName=' +
-        encodeURIComponent(
-          file.name
-        ) +
+            headers:{
+              'Content-Type':
+              'application/json'
+            },
 
-        '&mimeType=' +
-        encodeURIComponent(
-          file.type
-        ) +
+            body:JSON.stringify({
 
-        '&studentId=' +
-        encodeURIComponent(
-          localStorage.getItem(
-            'studentId'
-          ) || 'UNKNOWN'
-        ) +
+              action:'uploadFile',
 
-        '&base64=' +
-        encodeURIComponent(
-          base64
-        );
+              fileName:file.name,
 
-      const res =
-        await fetch(url);
+              mimeType:file.type,
 
-      const data =
-        await res.json();
+              studentId:
+                localStorage.getItem(
+                  'studentId'
+                ) || 'UNKNOWN',
 
-      document.getElementById(
-        'message'
-      ).innerText =
-      data.success
-      ?
-      'UPLOAD SUCCESS'
-      :
-      data.message;
+              base64:base64
+
+            })
+
+          });
+
+        const data =
+          await res.json();
+
+        document.getElementById(
+          'message'
+        ).innerText =
+
+          data.success
+          ?
+          'UPLOAD SUCCESS'
+          :
+          data.message;
+
+      }catch(err){
+
+        console.log(err);
+
+        alert(err);
+
+      }
 
     };
 
