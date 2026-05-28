@@ -125,7 +125,7 @@ async function uploadFile(){
 
       xhr.setRequestHeader(
         'Content-Type',
-        'application/json'
+        'text/plain'
       );
 
       /*
@@ -178,7 +178,9 @@ async function uploadFile(){
       ========================
       */
 
-      xhr.onerror = function(){
+      xhr.onerror = function(e){
+
+        console.log(e);
 
         hideLoading();
 
