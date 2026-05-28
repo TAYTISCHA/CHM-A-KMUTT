@@ -10,6 +10,38 @@ if(
 
 }
 
+/*
+========================
+POPUP
+========================
+*/
+
+function showLoading(text){
+
+  document.getElementById(
+    'loadingPopup'
+  ).style.display='flex';
+
+  document.getElementById(
+    'loadingText'
+  ).innerText=text;
+
+}
+
+function hideLoading(){
+
+  document.getElementById(
+    'loadingPopup'
+  ).style.display='none';
+
+}
+
+/*
+========================
+UPLOAD
+========================
+*/
+
 async function uploadFile(){
 
   const file =
@@ -31,10 +63,9 @@ async function uploadFile(){
 
   }
 
-  document.getElementById(
-    'message'
-  ).innerText =
-  'UPLOADING...';
+  showLoading(
+    'กำลังอัปโหลดไฟล์...'
+  );
 
   const reader =
     new FileReader();
@@ -80,17 +111,28 @@ async function uploadFile(){
         const data =
           await res.json();
 
-        document.getElementById(
-          'message'
-        ).innerText =
+        hideLoading();
 
-          data.success
-          ?
-          'UPLOAD SUCCESS'
-          :
-          data.message;
+        if(data.success){
+
+          alert(
+            'UPLOAD SUCCESS'
+          );
+
+          document.getElementById(
+            'message'
+          ).innerText =
+          'UPLOAD SUCCESS';
+
+        }else{
+
+          alert(data.message);
+
+        }
 
       }catch(err){
+
+        hideLoading();
 
         console.log(err);
 
