@@ -3,35 +3,29 @@
 
 <head>
 
-  <title>Viewer</title>
-
-  <link
-    rel="stylesheet"
-    href="css/style.css"
-  >
+  <title>
+    VIEW FILE
+  </title>
 
   <style>
 
     body{
 
       margin:0;
-      background:black;
+      padding:0;
+
+      background:#111;
 
     }
 
     iframe{
 
-      width:100%;
+      width:100vw;
       height:100vh;
+
       border:none;
 
-    }
-
-    img{
-
-      width:100%;
-      height:100vh;
-      object-fit:contain;
+      background:white;
 
     }
 
@@ -41,9 +35,54 @@
 
 <body>
 
-<div id="viewer"></div>
+<iframe id="viewer"></iframe>
 
-<script src="js/viewer.js"></script>
+<script>
+
+const params =
+  new URLSearchParams(
+    location.search
+  );
+
+const url =
+  params.get('url');
+
+const type =
+  params.get('type');
+
+/*
+========================
+PDF VIEWER
+========================
+*/
+
+if(type.includes('pdf')){
+
+  document.getElementById(
+    'viewer'
+  ).src =
+
+    'https://docs.google.com/gview?embedded=1&url=' +
+
+    encodeURIComponent(url);
+
+}
+
+/*
+========================
+IMAGE VIEWER
+========================
+*/
+
+else{
+
+  document.getElementById(
+    'viewer'
+  ).src = url;
+
+}
+
+</script>
 
 </body>
 </html>
