@@ -88,8 +88,7 @@ function renderFiles(files){
         <button
           onclick="
             openFile(
-              '${file.driveUrl}',
-              '${file.fileType}'
+              '${file.driveUrl}'
             )
           "
         >
@@ -112,17 +111,14 @@ OPEN FILE
 ========================
 */
 
-function openFile(url,type){
+function openFile(url){
 
   location.href =
 
     'viewer.html' +
 
     '?url=' +
-    encodeURIComponent(url) +
-
-    '&type=' +
-    encodeURIComponent(type);
+    encodeURIComponent(url);
 
 }
 
