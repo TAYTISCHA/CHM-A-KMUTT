@@ -1,80 +1,116 @@
-loadFiles();
+let allFiles = [];
+
+/*
+========================
+LOAD FILES
+========================
+*/
 
 async function loadFiles(){
 
-  const search =
-    document.getElementById(
-      'searchInput'
-    ).value
-    .toLowerCase();
+  try{
 
-  const url =
+    const res =
+      await fetch(
 
-    API_URL +
+        API_URL +
 
-    '?action=getFiles';
+        '?action=getFiles'
 
-  const res =
-    await fetch(url);
+      );
 
-  const data =
-    await res.json();
+    const data =
+      await res.json();
 
-  const list =
-    document.getElementById(
-      'filesList'
-    );
+    console.log(data);
 
-  list.innerHTML='';
+    if(data.success){
 
-  data.files.forEach(file=>{
+      allFiles = data.files;
 
-    if(
+      renderFiles(allFiles);
 
-      !file.fileName
-        .toLowerCase()
-        .includes(search)
+    }else{
 
-    ){
-
-      return;
+      alert(data.message);
 
     }
 
-    list.innerHTML += `
+  }catch(err){
 
-      <div style="
-        background:white;
-        color:black;
-        padding:10px;
-        margin-bottom:10px;
-        border-radius:10px;
-      ">
+    console.log(err);
 
-        <b>
+    alert(err);
+
+  }
+
+}
+
+/*
+========================
+RENDER FILES
+========================
+*/
+
+function renderFiles(files){
+
+  const fileList =
+    document.getElementById(
+      'fileList'
+    );
+
+  if(files.length === 0){
+
+    fileList.innerHTML =
+
+      '<p>NO FILES</p>';
+
+    return;
+
+  }
+
+  fileList.innerHTML = '';
+
+  files.forEach(file => {
+
+    fileList.innerHTML += `
+
+      <div class="file-card">
+
+        <h3>
           ${file.fileName}
-        </b>
+        </h3>
 
-        <br><br>
+        <p>
+          ${file.fileType}
+        </p>
 
         <button
           onclick="
-  openFile(
-    '${file.driveUrl}',
-    '${file.fileType}'
-  )
-"
+            openFile(
+              '${file.driveUrl}',
+              '${file.fileType}'
+            )
+          "
         >
           OPEN
         </button>
 
       </div>
 
+      <br>
+
     `;
 
   });
 
 }
+
+/*
+========================
+OPEN FILE
+========================
+*/
 
 function openFile(url,type){
 
@@ -89,3 +125,39 @@ function openFile(url,type){
     encodeURIComponent(type);
 
 }
+
+/*
+========================
+SEARCH
+========================
+*/
+
+function searchFiles(){
+
+  const keyword =
+    document.getElementById(
+      'searchInput'
+    )
+    .value
+    .toLowerCase();
+
+  const filtered =
+    allFiles.filter(file =>
+
+      file.fileName
+        .toLowerCase()
+        .includes(keyword)
+
+    );
+
+  renderFiles(filtered);
+
+}
+
+/*
+========================
+START
+========================
+*/
+
+loadFiles();
